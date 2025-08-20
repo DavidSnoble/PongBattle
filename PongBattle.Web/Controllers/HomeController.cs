@@ -17,11 +17,21 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        var userRepository = new UserRepository();
-        User user = userRepository.Get(1);
+        return View();
+    }
 
-        var userViewModel = UserViewModel.FromUser(user);
-        return View(userViewModel);
+    [Route("/users/{userId:int}")]
+    public IActionResult UserIndex(int userId)
+    {
+        var userRepository = new UserRepository();
+        var user = userRepository.Get(userId);
+
+        if (user is not null)
+        {
+            var userViewModel = UserViewModel.FromUser(user);
+            return View(userViewModel);
+        }
+        return View("Views/Home/404.cshtml");
     }
 
     public IActionResult Privacy()

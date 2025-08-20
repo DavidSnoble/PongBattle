@@ -4,13 +4,6 @@ using PongBattle.Domain;
 
 public class UserViewModel
 {
-    //public UserViewModel(User user)
-    //{
-    //    EmailAddress = user.EmailAddress;
-    //    FirstName = user.FirstName;
-    //    LastName = user.LastName;
-    //}
-
     public static UserViewModel FromUser(User user)
     {
         return new UserViewModel

@@ -3,6 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PongBattle.Data", "PongBattle.Data\PongBattle.Data.csproj", "{E19F3BE0-A309-4BBC-92D2-2EC51DE7F5D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PongBattle.Domain", "PongBattle.Domain\PongBattle.Domain.csproj", "{347DA654-0ABD-486E-9525-CE4A04353BC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PongBattle.Web", "PongBattle.Web\PongBattle.Web.csproj", "{2599D3FB-2BA5-4A81-A50B-A51346B7D9CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -10,5 +16,19 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E19F3BE0-A309-4BBC-92D2-2EC51DE7F5D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E19F3BE0-A309-4BBC-92D2-2EC51DE7F5D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E19F3BE0-A309-4BBC-92D2-2EC51DE7F5D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E19F3BE0-A309-4BBC-92D2-2EC51DE7F5D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{347DA654-0ABD-486E-9525-CE4A04353BC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{347DA654-0ABD-486E-9525-CE4A04353BC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{347DA654-0ABD-486E-9525-CE4A04353BC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{347DA654-0ABD-486E-9525-CE4A04353BC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2599D3FB-2BA5-4A81-A50B-A51346B7D9CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2599D3FB-2BA5-4A81-A50B-A51346B7D9CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2599D3FB-2BA5-4A81-A50B-A51346B7D9CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2599D3FB-2BA5-4A81-A50B-A51346B7D9CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
