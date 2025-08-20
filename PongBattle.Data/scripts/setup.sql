@@ -28,6 +28,8 @@ GO
 
 -- Insert some fresh data
 INSERT INTO Users (EmailAddress, FirstName, LastName, PhoneNumber) VALUES ('dsnoble@stackoverflow.com', 'David', 'Snoble', '7805126101');
+INSERT INTO Users (EmailAddress, FirstName, LastName) VALUES ('example@example.com', 'Example', 'Admin');
+
 GO
 
 PRINT 'Database and table created successfully. Data inserted.';
