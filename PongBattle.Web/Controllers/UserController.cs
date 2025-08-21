@@ -49,10 +49,15 @@ public class UserController : Controller
 
     [Route("/users/add")]
     [HttpPost]
-    public IActionResult AddUser(UserViewModel user)
+    public IActionResult AddUser(UserViewModel userViewModel)
     {
-        Console.WriteLine("HELLO WE ARE GITTHING THIS");
-        return View();
+        var userRepository = new UserRepository();
+
+        var user = UserViewModel.ToUser(userViewModel);
+
+        userRepository.Create(user);
+
+        return RedirectToAction("Index");
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
