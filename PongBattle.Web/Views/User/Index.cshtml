@@ -1,39 +1,38 @@
 @model IEnumerable<UserViewModel>
 @{
-    ViewData["Title"] = "User List Page";
-    var count = Model.Count();
+  ViewData["Title"] = "User List Page";
+  var count = Model.Count();
 }
 
-<div class="text-center">
-    <h1 class="display-4">There are @count total users</h1>
-    <table>
-        <thead>
-        <tr>
-            <th>
-                First Name
-            </th>
-             <th>
-                Last Name
-            </th>
-             <th>
-                Email
-            </th>
-        </tr>
-        </thead>
-        @foreach (var userViewModel in Model)
-        {
-            <tr>
-                <td>
-                @userViewModel.FirstName
-                </td>
-                 <td>
-                @userViewModel.LastName
-                </td>
-                 <td>
-                @userViewModel.EmailAddress
-                </td>
-            </tr>
-        }
-    </table>
+<h1 class="display-4">There are @count total users</h1>
+<div class="s-table-container">
+  <table class="s-table">
+    <thead>
+      <tr>
+        <th>
+          First Name
+        </th>
+        <th>
+          Last Name
+        </th>
+        <th>
+          Email
+        </th>
+      </tr>
+    </thead>
+    @foreach (var userViewModel in Model)
+    {
+      <tr>
+        <td>
+          @userViewModel.FirstName
+        </td>
+        <td>
+          @userViewModel.LastName
+        </td>
+        <td>
+          @userViewModel.EmailAddress
+        </td>
+      </tr>
+    }
+  </table>
 </div>
-

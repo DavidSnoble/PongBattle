@@ -1,0 +1,27 @@
+@{
+    ViewData["Title"] = "User Page";
+}
+<div class="wmx50">
+    <form class="d-flex gy16 fd-column" action="/users/add" method="post">
+        <div class="d-flex gy4 fd-column">
+            <label class="s-label" for="firstName">First Name</label>
+            <input class="s-input" id="firstName" type="text"/>
+        </div>
+        <div class="d-flex gy4 fd-column">
+            <label class="s-label" for="lastName">Last Name</label>
+            <input class="s-input" id="lastName" type="text"/>
+        </div>
+        <div class="d-flex gy4 fd-column">
+            <label class="s-label" for="emailAddress">Email Address</label>
+            <input class="s-input" id="emailAddress" type="text"/>
+        </div>
+        <div class="d-flex gy4 fd-column">
+            <label class="s-label" for="phoneNumber">Phone Number</label>
+            <input class="s-input" id="phoneNumber" type="text"/>
+        </div>
+
+        <div class="d-flex jc-end">
+            <button class="s-btn s-btn__filled" type="submit">Save</button>
+        </div>
+    </form>
+</div>

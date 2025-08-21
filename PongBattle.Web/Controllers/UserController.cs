@@ -36,7 +36,23 @@ public class UserController : Controller
             var userViewModel = UserViewModel.FromUser(user);
             return View(userViewModel);
         }
+
         return View("/Views/Home/404.cshtml");
+    }
+
+    [Route("/users/add")]
+    [HttpGet]
+    public IActionResult AddUser()
+    {
+        return View();
+    }
+
+    [Route("/users/add")]
+    [HttpPost]
+    public IActionResult AddUser(UserViewModel user)
+    {
+        Console.WriteLine("HELLO WE ARE GITTHING THIS");
+        return View();
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
