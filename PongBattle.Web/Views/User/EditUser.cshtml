@@ -1,0 +1,13 @@
+@model UserViewModel
+@{
+  ViewData["Title"] = "Edit User";
+}
+<div class="wmx50">
+  <form class="d-flex gy16 fd-column" action="/users/edit" method="post">
+    <partial name="_UserForm" model="Model"/>
+  </form>
+</div>
+
+@section scripts{
+  <partial name="_ValidationScriptsPartial"/>
+}

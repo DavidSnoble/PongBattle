@@ -3,36 +3,42 @@ using PongBattle.Domain;
 
 namespace PongBattle.Data;
 
-public class UserRepository
+public class UserRepository : BaseDataRepository
 {
     public User? Get(int id)
     {
-        var dbContext = new DbContext();
-        var connection = dbContext.Connection;
-        // Query data with Dapper
         var sql = "SELECT * FROM Users WHERE Id = @id";
-        var user = connection.QueryFirstOrDefault<User>(sql, new { id });
+        var user = Connection.QueryFirstOrDefault<User>(sql, new { id });
         return user;
     }
 
     public IEnumerable<User> GetAll()
     {
-        var dbContext = new DbContext();
-        var connection = dbContext.Connection;
-        // Query data with Dapper
         var sql = "SELECT * FROM Users";
-        var users = connection.Query<User>(sql);
+        var users = Connection.Query<User>(sql);
         return users;
     }
 
-    public void Create(User user)
+    public int Create(User user)
     {
-        var dbContext = new DbContext();
-        var connection = dbContext.Connection;
         var sql =
             @"
                 INSERT INTO Users (FirstName, LastName, EmailAddress, PhoneNumber) VALUES (@FirstName, @LastName, @EmailAddress, @PhoneNumber);
                 SELECT CAST(SCOPE_IDENTITY() as int)";
-        connection.QuerySingle<int>(sql, user);
+        return Connection.QuerySingle<int>(sql, user);
+    }
+
+    public void Update(User user)
+    {
+        var sql =
+            @"
+            UPDATE Users SET 
+            FirstName=@FirstName, 
+            LastName=@LastName, 
+            EmailAddress=@EmailAddress, 
+            PhoneNumber=@PhoneNumber
+            WHERE Id = @Id;
+        ";
+        Connection.Execute(sql, user);
     }
 }

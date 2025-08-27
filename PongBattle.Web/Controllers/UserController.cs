@@ -20,7 +20,7 @@ public class UserController : Controller
         var userRepository = new UserRepository();
         var users = userRepository.GetAll();
 
-        var userViewModels = users.Select(u => UserViewModel.FromUser(u));
+        var userViewModels = users.Select(u => new UserViewModel(u));
 
         return View(userViewModels);
     }
@@ -33,7 +33,7 @@ public class UserController : Controller
 
         if (user is not null)
         {
-            var userViewModel = UserViewModel.FromUser(user);
+            var userViewModel = new UserViewModel(user);
             return View(userViewModel);
         }
 
@@ -44,19 +44,57 @@ public class UserController : Controller
     [HttpGet]
     public IActionResult AddUser()
     {
-        return View();
+        return View(new UserViewModel());
     }
 
     [Route("/users/add")]
     [HttpPost]
     public IActionResult AddUser(UserViewModel userViewModel)
     {
+        var errors = userViewModel.Validate();
+        if (errors.Any())
+        {
+            foreach (var error in errors)
+                ModelState.AddModelError(error.Key, error.Value);
+
+            return View(userViewModel);
+        }
+
         var userRepository = new UserRepository();
 
         var user = UserViewModel.ToUser(userViewModel);
-
         userRepository.Create(user);
 
+        return RedirectToAction("Index");
+    }
+
+    [Route("/users/{userId:int}/edit")]
+    [HttpGet]
+    public IActionResult EditUser(int userId)
+    {
+        var userRepository = new UserRepository();
+        var user = userRepository.Get(userId);
+
+        if (user is null) return View("/Views/Home/404.cshtml");
+        var userViewModel = new UserViewModel(user);
+
+
+        return View(userViewModel);
+    }
+
+    [Route("/users/edit")]
+    [HttpPost]
+    public IActionResult EditUser(UserViewModel userViewModel)
+    {
+        var user = UserViewModel.ToUser(userViewModel);
+
+
+        var userRepository = new UserRepository();
+        userRepository.Update(user);
+        var errors = userViewModel.Validate();
+        if (errors.Any())
+            foreach (var error in errors)
+                ModelState.AddModelError(error.Key, error.Value);
         return RedirectToAction("Index");
     }
 

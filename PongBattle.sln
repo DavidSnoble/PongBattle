@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PongBattle.Domain", "PongBa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PongBattle.Web", "PongBattle.Web\PongBattle.Web.csproj", "{2599D3FB-2BA5-4A81-A50B-A51346B7D9CE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PongBattle.Utilities", "PongBattle.Utilities\PongBattle.Utilities.csproj", "{DDA5C5AA-FFBC-422C-82B7-07291CC7CD06}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{2599D3FB-2BA5-4A81-A50B-A51346B7D9CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2599D3FB-2BA5-4A81-A50B-A51346B7D9CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2599D3FB-2BA5-4A81-A50B-A51346B7D9CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDA5C5AA-FFBC-422C-82B7-07291CC7CD06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDA5C5AA-FFBC-422C-82B7-07291CC7CD06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDA5C5AA-FFBC-422C-82B7-07291CC7CD06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDA5C5AA-FFBC-422C-82B7-07291CC7CD06}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

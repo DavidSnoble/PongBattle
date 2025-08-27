@@ -1,0 +1,28 @@
+@model UserViewModel
+
+<div class="d-flex gy4 fd-column">
+    <label class="s-label" asp-for="FirstName">First Name</label>
+    <input class="s-input" asp-for="FirstName"/>
+    <span asp-validation-for="FirstName" class="text-danger"></span>
+</div>
+<div class="d-flex gy4 fd-column">
+    <label class="s-label" asp-for="LastName">Last Name</label>
+    <input class="s-input" asp-for="LastName"/>
+    <span asp-validation-for="LastName" class="text-danger"></span>
+</div>
+<div class="d-flex gy4 fd-column">
+    <label class="s-label" asp-for="EmailAddress">Email Address</label>
+    <input class="s-input" asp-for="EmailAddress"/>
+    <span asp-validation-for="EmailAddress" class="text-danger"></span>
+</div>
+<div class="d-flex gy4 fd-column">
+    <label class="s-label" asp-for="PhoneNumber">Phone Number</label>
+    <input class="s-input" asp-for="PhoneNumber"/>
+    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+</div>
+
+<input id="id" name="id" value="@Model.Id" type="hidden"/>
+<div class="d-flex jc-end">
+    <button class="s-btn s-btn__filled" type="submit">Save</button>
+</div>
+

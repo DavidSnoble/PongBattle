@@ -8,17 +8,20 @@
 <div class="s-table-container">
   <table class="s-table">
     <thead>
-      <tr>
-        <th>
-          First Name
-        </th>
-        <th>
-          Last Name
-        </th>
-        <th>
-          Email
-        </th>
-      </tr>
+    <tr>
+      <th>
+        First Name
+      </th>
+      <th>
+        Last Name
+      </th>
+      <th>
+        Email
+      </th>
+      <th>
+        Actions
+      </th>
+    </tr>
     </thead>
     @foreach (var userViewModel in Model)
     {
@@ -31,6 +34,9 @@
         </td>
         <td>
           @userViewModel.EmailAddress
+        </td>
+        <td>
+          <a href="/users/@userViewModel.Id/edit" class="btn">Edit</a>
         </td>
       </tr>
     }
