@@ -3,7 +3,7 @@ using PongBattle.Utilities;
 
 namespace PongBattle.Web.Models;
 
-public class UserViewModel
+public class UserViewModel : IViewModel
 {
     public UserViewModel()
     {
@@ -27,24 +27,24 @@ public class UserViewModel
     public string? LastName { get; set; }
     public string? PhoneNumber { get; set; }
 
-    private bool IsValid()
-    {
-        return FirstName is not null && LastName is not null &&
-               EmailAddress is not null;
-    }
-
     public Dictionary<string, string> Validate()
     {
         var errorMap = new Dictionary<string, string>();
         if (string.IsNullOrWhiteSpace(FirstName))
             errorMap.Add("FirstName", "First Name is Required");
         if (string.IsNullOrWhiteSpace(LastName))
-            errorMap.Add("FirstName", "Last Name is Required");
+            errorMap.Add("LastName", "Last Name is Required");
         if (!RegexUtilities.IsValidEmail(EmailAddress))
             errorMap.Add("EmailAddress", "EmailAddress is blank or invalid");
         if (string.IsNullOrWhiteSpace(PhoneNumber) || !(PhoneNumber.Length == 10))
             errorMap.Add("PhoneNumber", "PhoneNumber is blank or invalid");
         return errorMap;
+    }
+
+    private bool IsValid()
+    {
+        return FirstName is not null && LastName is not null &&
+               EmailAddress is not null;
     }
 
     public static User ToUser(UserViewModel userViewModel)

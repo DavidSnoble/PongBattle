@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using PongBattle.Data;
 using PongBattle.Web.Models;
+using PongBattle.Web.Utilities;
 
 namespace PongBattle.Web.Controllers;
 
@@ -51,21 +52,15 @@ public class UserController : Controller
     [HttpPost]
     public IActionResult AddUser(UserViewModel userViewModel)
     {
-        var errors = userViewModel.Validate();
-        if (errors.Any())
-        {
-            foreach (var error in errors)
-                ModelState.AddModelError(error.Key, error.Value);
+        return ValidationUtilities.ValidateFormAndRenderView(userViewModel, ModelState, RedirectToAction("Index"),
+            View(userViewModel),
+            () =>
+            {
+                var userRepository = new UserRepository();
 
-            return View(userViewModel);
-        }
-
-        var userRepository = new UserRepository();
-
-        var user = UserViewModel.ToUser(userViewModel);
-        userRepository.Create(user);
-
-        return RedirectToAction("Index");
+                var user = UserViewModel.ToUser(userViewModel);
+                userRepository.Create(user);
+            });
     }
 
     [Route("/users/{userId:int}/edit")]
@@ -86,16 +81,15 @@ public class UserController : Controller
     [HttpPost]
     public IActionResult EditUser(UserViewModel userViewModel)
     {
-        var user = UserViewModel.ToUser(userViewModel);
+        return ValidationUtilities.ValidateFormAndRenderView(userViewModel, ModelState, RedirectToAction("Index"),
+            View(userViewModel),
+            () =>
+            {
+                var userRepository = new UserRepository();
 
-
-        var userRepository = new UserRepository();
-        userRepository.Update(user);
-        var errors = userViewModel.Validate();
-        if (errors.Any())
-            foreach (var error in errors)
-                ModelState.AddModelError(error.Key, error.Value);
-        return RedirectToAction("Index");
+                var user = UserViewModel.ToUser(userViewModel);
+                userRepository.Update(user);
+            });
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
