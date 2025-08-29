@@ -1,0 +1,50 @@
+@model TeamViewModel
+@{
+  ViewData["Title"] = "Team Details";
+}
+
+<div class="d-flex fd-column ai-center">
+  <h1 class="fs-display3 mb8">Team Details</h1>
+
+  <div class="s-card wmx6 mx-auto">
+    <div class="s-card__body">
+      <h2 class="s-card__title mb8">@Model.Name</h2>
+
+      <div class="d-grid g8 grid__2 md:grid__2">
+        <div>
+          <h3 class="fs-subheading fw-bold mb4">Player One:</h3>
+          @if (Model.PlayerOne != null)
+          {
+            <p class="fw-bold mb2">@($"{Model.PlayerOne.FirstName} {Model.PlayerOne.LastName}")</p>
+            <p class="fs-body2 fc-light">@Model.PlayerOne.EmailAddress</p>
+          }
+          else
+          {
+            <p class="fs-body2 fc-light">Unknown Player</p>
+          }
+        </div>
+
+        <div>
+          <h3 class="fs-subheading fw-bold mb4">Player Two:</h3>
+          @if (Model.PlayerTwo != null)
+          {
+            <p class="fw-bold mb2">@($"{Model.PlayerTwo.FirstName} {Model.PlayerTwo.LastName}")</p>
+            <p class="fs-body2 fc-light">@Model.PlayerTwo.EmailAddress</p>
+          }
+          else
+          {
+            <p class="fs-body2 fc-light">No Second Player</p>
+          }
+        </div>
+      </div>
+
+      <div class="d-flex gap8 mt8">
+        <a href="/teams" class="s-btn s-btn__secondary">Back to Teams</a>
+        @if (Model.Id.HasValue)
+        {
+          <a href="/teams/@Model.Id/edit" class="s-btn s-btn__primary">Edit Team</a>
+        }
+      </div>
+    </div>
+  </div>
+</div>

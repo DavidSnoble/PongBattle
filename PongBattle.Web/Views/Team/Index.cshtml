@@ -1,0 +1,62 @@
+@model IEnumerable<TeamViewModel>
+@{
+  ViewData["Title"] = "Team List Page";
+  var count = Model.Count();
+}
+
+<h1 class="display-4">There are @count total teams</h1>
+<div class="s-table-container">
+  <table class="s-table">
+    <thead>
+    <tr>
+      <th>
+        Team Name
+      </th>
+      <th>
+        Player One
+      </th>
+      <th>
+        Player Two
+      </th>
+      <th>
+        Actions
+      </th>
+    </tr>
+    </thead>
+    @foreach (var teamViewModel in Model)
+    {
+      <tr>
+        <td>
+          @teamViewModel.Name
+        </td>
+        <td>
+          @if (teamViewModel.PlayerOne != null)
+          {
+            @($"{teamViewModel.PlayerOne.FirstName} {teamViewModel.PlayerOne.LastName}")
+          }
+          else
+          {
+            <span class="fc-light">Unknown Player</span>
+          }
+        </td>
+        <td>
+          @if (teamViewModel.PlayerTwo != null)
+          {
+            @($"{teamViewModel.PlayerTwo.FirstName} {teamViewModel.PlayerTwo.LastName}")
+          }
+          else
+          {
+            <span class="fc-light">No Second Player</span>
+          }
+        </td>
+        <td>
+          @if (teamViewModel.Id.HasValue)
+          {
+            <a href="/teams/@teamViewModel.Id" class="btn">View</a>
+          }
+        </td>
+      </tr>
+    }
+  </table>
+</div>
+

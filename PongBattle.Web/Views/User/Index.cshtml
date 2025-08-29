@@ -4,7 +4,7 @@
   var count = Model.Count();
 }
 
-<h1 class="display-4">There are @count total users</h1>
+<h1 class="ta-center">There are @count total users</h1>
 <div class="s-table-container">
   <table class="s-table">
     <thead>
@@ -36,7 +36,7 @@
           @userViewModel.EmailAddress
         </td>
         <td>
-          <a href="/users/@userViewModel.Id/edit" class="btn">Edit</a>
+          <a href="/users/@userViewModel.Id/edit" class="s-btn">Edit</a>
         </td>
       </tr>
     }
