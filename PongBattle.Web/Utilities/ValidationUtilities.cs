@@ -1,8 +1,8 @@
+namespace PongBattle.Web.Utilities;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using PongBattle.Web.Models;
-
-namespace PongBattle.Web.Utilities;
+using Models;
 
 public class ValidationUtilities
 {
@@ -16,7 +16,10 @@ public class ValidationUtilities
             return successAction;
         }
 
-        foreach (var error in errors) modelState.AddModelError(error.Key, error.Value);
+        foreach (var error in errors)
+        {
+            modelState.AddModelError(error.Key, error.Value);
+        }
 
         return failureAction;
     }
