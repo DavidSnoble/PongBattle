@@ -66,6 +66,13 @@ VALUES ('Funk Hunters',
         (SELECT Id
          FROM Users
          WHERE EmailAddress = 'dsnoble@stackoverflow.com'));
+
+INSERT INTO Teams (Name, PlayerOneId, PlayerTwoId)
+VALUES ('Funk Hunters',
+        (SELECT Id
+         FROM Users
+         WHERE EmailAddress = 'dsnoble@stackoverflow.com'),
+        (SELECT Id FROM Users WHERE EmailAddress = 'example@example.com'));
 GO
 
 PRINT 'Database and table created successfully. Data inserted.';

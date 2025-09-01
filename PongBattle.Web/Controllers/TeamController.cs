@@ -18,9 +18,26 @@ public class TeamController : Controller
     public IActionResult Index()
     {
         var teamRepository = new TeamRepository();
+        var userRepository = new UserRepository();
         var teams = teamRepository.GetAll();
 
-        var teamViewModels = teams.Select(t => new TeamViewModel(t));
+        var teamViewModels = teams.Select(t => {
+            var viewModel = new TeamViewModel(t);
+
+            // Load PlayerOne if ID exists
+            if (viewModel.PlayerOneId.HasValue)
+            {
+                viewModel.PlayerOne = userRepository.Get(viewModel.PlayerOneId.Value);
+            }
+
+            // Load PlayerTwo if ID exists
+            if (viewModel.PlayerTwoId.HasValue)
+            {
+                viewModel.PlayerTwo = userRepository.Get(viewModel.PlayerTwoId.Value);
+            }
+
+            return viewModel;
+        });
 
         return View(teamViewModels);
     }
@@ -29,11 +46,25 @@ public class TeamController : Controller
     public IActionResult DisplayTeam(int teamId)
     {
         var teamRepository = new TeamRepository();
+        var userRepository = new UserRepository();
         var team = teamRepository.Get(teamId);
 
         if (team is not null)
         {
             var teamViewModel = new TeamViewModel(team);
+
+            // Load PlayerOne if ID exists
+            if (teamViewModel.PlayerOneId.HasValue)
+            {
+                teamViewModel.PlayerOne = userRepository.Get(teamViewModel.PlayerOneId.Value);
+            }
+
+            // Load PlayerTwo if ID exists
+            if (teamViewModel.PlayerTwoId.HasValue)
+            {
+                teamViewModel.PlayerTwo = userRepository.Get(teamViewModel.PlayerTwoId.Value);
+            }
+
             return View(teamViewModel);
         }
 

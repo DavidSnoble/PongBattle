@@ -4,9 +4,7 @@ namespace PongBattle.Web.Models;
 
 public class TeamViewModel : IViewModel
 {
-    public TeamViewModel()
-    {
-    }
+    public TeamViewModel() { }
 
     public TeamViewModel(Team team)
     {
@@ -14,8 +12,6 @@ public class TeamViewModel : IViewModel
         Name = team.Name;
         PlayerOneId = team.PlayerOneId;
         PlayerTwoId = team.PlayerTwoId;
-        PlayerOne = team.PlayerOne;
-        PlayerTwo = team.PlayerTwo;
     }
 
     public int? Id { get; set; }
@@ -49,14 +45,15 @@ public class TeamViewModel : IViewModel
     {
         if (!teamViewModel.IsValid())
             throw new ArgumentException(
-                "TeamViewModel is not valid. Required fields (Name, PlayerOneId) cannot be null.");
+                "TeamViewModel is not valid. Required fields (Name, PlayerOneId) cannot be null."
+            );
 
         return new Team
         {
             Id = teamViewModel.Id,
             Name = teamViewModel.Name!,
             PlayerOneId = teamViewModel.PlayerOneId!.Value,
-            PlayerTwoId = teamViewModel.PlayerTwoId
+            PlayerTwoId = teamViewModel.PlayerTwoId,
         };
     }
 }
