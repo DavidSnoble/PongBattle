@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using PongBattle.Data;
 using PongBattle.Web.Models;
+using PongBattle.Web.Utilities;
 
 namespace PongBattle.Web.Controllers;
 
@@ -70,6 +71,38 @@ public class TeamController : Controller
 
         return View("/Views/Home/404.cshtml");
     }
+
+    [Route("/teams/add")]
+    [HttpGet]
+    public IActionResult AddTeam()
+    {
+        var userRepository = new UserRepository();
+        var teamViewModel = new TeamViewModel
+        {
+            Users = userRepository.GetAll()
+        };
+
+        return View(teamViewModel);
+    }
+
+    [Route("/teams/add")]
+    [HttpPost]
+    public IActionResult AddTeam(TeamViewModel teamViewModel)
+    {
+        var userRepository = new UserRepository();
+        teamViewModel.Users = userRepository.GetAll();
+
+        return ValidationUtilities.ValidateFormAndRenderView(teamViewModel, ModelState, RedirectToAction("Index"),
+            View(teamViewModel),
+            () =>
+            {
+                var teamRepository = new TeamRepository();
+
+                var team = TeamViewModel.ToTeam(teamViewModel);
+                teamRepository.Create(team);
+            });
+    }
+
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

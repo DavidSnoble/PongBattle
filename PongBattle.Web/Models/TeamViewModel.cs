@@ -23,6 +23,8 @@ public class TeamViewModel : IViewModel
     public User? PlayerOne { get; set; }
     public User? PlayerTwo { get; set; }
 
+    public IEnumerable<User> Users { get; set; } = new List<User>();
+
     public Dictionary<string, string> Validate()
     {
         var errorMap = new Dictionary<string, string>();
@@ -32,6 +34,9 @@ public class TeamViewModel : IViewModel
 
         if (!PlayerOneId.HasValue)
             errorMap.Add("PlayerOneId", "Player One is Required");
+
+        if (PlayerOneId.HasValue && PlayerTwoId.HasValue && PlayerOneId.Value == PlayerTwoId.Value)
+            errorMap.Add("PlayerTwoId", "Player Two must be different from Player One");
 
         return errorMap;
     }

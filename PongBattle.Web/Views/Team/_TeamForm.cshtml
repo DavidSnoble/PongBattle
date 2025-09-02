@@ -1,0 +1,76 @@
+@model TeamViewModel
+
+<div class="d-flex gy4 fd-column">
+  <label class="s-label" asp-for="Name">Team Name</label>
+  <input class="s-input" asp-for="Name" />
+  <span asp-validation-for="Name" class="text-danger"></span>
+</div>
+<div class="d-flex gy4 fd-column">
+  <label class="flex--item s-label" asp-for="PlayerOneId">
+    Player One
+  </label>
+  <div class="flex--item s-select">
+    <select asp-for="PlayerOneId" asp-items="@(Model.Users.Select(u => new SelectListItem { Value = u.Id.ToString(), Text = u.FirstName + " " + u.LastName + " (" + u.EmailAddress + ")" }))">
+      <option value="">Please select one…</option>
+    </select>
+  </div>
+  <span asp-validation-for="PlayerOneId" class="text-danger"></span>
+</div>
+<div class="d-flex gy4 fd-column">
+  <label class="flex--item s-label" asp-for="PlayerTwoId">
+    Player Two
+  </label>
+  <div class="flex--item s-select">
+    <select asp-for="PlayerTwoId" asp-items="@(Model.Users.Where(u => !Model.PlayerOneId.HasValue || u.Id != Model.PlayerOneId.Value).Select(u => new SelectListItem { Value = u.Id.ToString(), Text = u.FirstName + " " + u.LastName + " (" + u.EmailAddress + ")" }))">
+      <option value="">Please select one…</option>
+    </select>
+  </div>
+</div>
+<input id="id" name="id" value="@Model.Id" type="hidden" />
+<div class="d-flex jc-end">
+  <button class="s-btn s-btn__filled " type="submit">Save</button>
+</div>
+
+<script>
+(function () {
+  function init() {
+    const p1 = document.getElementById('PlayerOneId');
+    const p2 = document.getElementById('PlayerTwoId');
+    if (!p1 || !p2) return;
+
+    function toggle() {
+      const hasP1 = p1.value && p1.value !== '';
+      p2.disabled = !hasP1;
+      if (!hasP1) {
+        p2.value = '';
+      }
+    }
+
+    function filterPlayerTwoOptions() {
+      const selected = p1.value;
+      for (const option of p2.options) {
+        if (!option.value) continue;
+        const isSame = option.value === selected;
+        option.disabled = isSame;
+        option.hidden = isSame;
+      }
+      if (p2.value === selected) {
+        p2.value = '';
+      }
+    }
+
+    toggle();
+    filterPlayerTwoOptions();
+    p1.addEventListener('change', function() {
+      toggle();
+      filterPlayerTwoOptions();
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>

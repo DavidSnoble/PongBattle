@@ -1,0 +1,13 @@
+@model TeamViewModel
+@{
+  ViewData["Title"] = "Add Team";
+}
+<div class="wmx50">
+  <form class="d-flex gy16 fd-column" action="/teams/add" method="post">
+    <partial name="_TeamForm" model="Model" />
+  </form>
+</div>
+
+@section scripts {
+  <partial name="_ValidationScriptsPartial" />
+}

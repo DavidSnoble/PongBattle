@@ -4,24 +4,27 @@
   var count = Model.Count();
 }
 
-<h1 class="display-4">There are @count total teams</h1>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <h2 class="fs-headline2">There are @count total teams</h1>
+    <a class="s-btn s-btn__primary" href="/teams/add">Add Team</a>
+</div>
 <div class="s-table-container">
   <table class="s-table">
     <thead>
-    <tr>
-      <th>
-        Team Name
-      </th>
-      <th>
-        Player One
-      </th>
-      <th>
-        Player Two
-      </th>
-      <th>
-        Actions
-      </th>
-    </tr>
+      <tr>
+        <th>
+          Team Name
+        </th>
+        <th>
+          Player One
+        </th>
+        <th>
+          Player Two
+        </th>
+        <th>
+          Actions
+        </th>
+      </tr>
     </thead>
     @foreach (var teamViewModel in Model)
     {
@@ -59,4 +62,3 @@
     }
   </table>
 </div>
-
