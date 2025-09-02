@@ -31,7 +31,7 @@ public class TeamRepository : BaseDataRepository
     {
         var sql =
             @"
-        UPDATE Team SET 
+        UPDATE Teams SET
         Name = @Name,
         PlayerOneId = @PlayerOneId,
         PlayerTwoId = @PlayerTwoId

@@ -103,6 +103,44 @@ public class TeamController : Controller
             });
     }
 
+    [Route("/teams/{teamId:int}/edit")]
+    [HttpGet]
+    public IActionResult EditTeam(int teamId)
+    {
+        var teamRepository = new TeamRepository();
+        var userRepository = new UserRepository();
+        var team = teamRepository.Get(teamId);
+
+        if (team is null)
+        {
+            return View("/Views/Home/404.cshtml");
+        }
+
+        var teamViewModel = new TeamViewModel(team)
+        {
+            Users = userRepository.GetAll()
+        };
+
+        return View(teamViewModel);
+    }
+
+    [Route("/teams/edit")]
+    [HttpPost]
+    public IActionResult EditTeam(TeamViewModel teamViewModel)
+    {
+        var userRepository = new UserRepository();
+        teamViewModel.Users = userRepository.GetAll();
+
+        return ValidationUtilities.ValidateFormAndRenderView(teamViewModel, ModelState, RedirectToAction("Index"),
+            View(teamViewModel),
+            () =>
+            {
+                var teamRepository = new TeamRepository();
+
+                var team = TeamViewModel.ToTeam(teamViewModel);
+                teamRepository.Update(team);
+            });
+    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
