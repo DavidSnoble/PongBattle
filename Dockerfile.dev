@@ -1,0 +1,14 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS base
+WORKDIR /src
+
+# Copy csproj and restore as distinct layers
+COPY ["PongBattle.sln", "."]
+COPY ["PongBattle.Web/PongBattle.Web.csproj", "PongBattle.Web/"]
+COPY ["PongBattle.Data/PongBattle.Data.csproj", "PongBattle.Data/"]
+COPY ["PongBattle.Domain/PongBattle.Domain.csproj", "PongBattle.Domain/"]
+COPY ["PongBattle.Utilities/PongBattle.Utilities.csproj", "PongBattle.Utilities/"]
+RUN dotnet restore "PongBattle.sln"
+
+# Set up the entrypoint for dotnet watch
+WORKDIR /src/PongBattle.Web
+ENTRYPOINT ["dotnet", "watch", "run", "--urls", "http://*:8080"]

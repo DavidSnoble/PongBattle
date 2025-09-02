@@ -1,9 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <ItemGroup>
-        <ProjectReference Include="..\PongBattle.Domain\PongBattle.Domain.csproj"/>
-        <ProjectReference Include="..\PongBattle.Data\PongBattle.Data.csproj"/>
-        <ProjectReference Include="..\PongBattle.Utilities\PongBattle.Utilities.csproj"/>
+        <ProjectReference Include="..\PongBattle.Domain\PongBattle.Domain.csproj" />
+        <ProjectReference Include="..\PongBattle.Data\PongBattle.Data.csproj" />
+        <ProjectReference Include="..\PongBattle.Utilities\PongBattle.Utilities.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.0" />
     </ItemGroup>
 
     <PropertyGroup>
