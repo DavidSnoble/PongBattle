@@ -22,11 +22,25 @@ public class GameService
 
     public GameState CreateGame(string gameId)
     {
-        var gameState = new GameState
+        var gameState = new GameState { GameId = gameId, IsGameActive = true };
+
+        // Initialize both paddles immediately so collision detection works from the start
+        var leftPaddle = new Paddle
         {
-            GameId = gameId,
-            IsGameActive = true
+            PlayerId = "player1",
+            X = 50,  // Left paddle position
+            Y = 300, // Center vertically
         };
+
+        var rightPaddle = new Paddle
+        {
+            PlayerId = "player2",
+            X = 730, // Right paddle position
+            Y = 300, // Center vertically
+        };
+
+        gameState.Paddles["player1"] = leftPaddle;
+        gameState.Paddles["player2"] = rightPaddle;
 
         _games[gameId] = gameState;
         return gameState;
@@ -48,12 +62,20 @@ public class GameService
             }
             else
             {
-                // Create new paddle for player
+                float paddleX;
+                if (playerId == "player1")
+                {
+                    paddleX = 50;
+                }
+                else
+                {
+                    paddleX = 730;
+                }
                 var newPaddle = new Paddle
                 {
                     PlayerId = playerId,
-                    X = gameState.Paddles.Count == 0 ? 50 : 730, // Left or right paddle
-                    Y = yPosition
+                    X = paddleX,
+                    Y = yPosition,
                 };
                 gameState.Paddles[playerId] = newPaddle;
             }
@@ -103,12 +125,16 @@ public class GameService
             var newX = game.Ball.X;
             var newY = game.Ball.Y;
 
-        // Broadcast the updated game state to all clients
-        var updateData = new {
-            Ball = new { X = newX, Y = newY },
-            Paddles = game.Paddles.ToDictionary(p => p.Key, p => new { p.Value.X, p.Value.Y })
-        };
-        _hubContext.Clients.Group(game.GameId).SendAsync("GameUpdate", updateData);
+            // Broadcast the updated game state to all clients
+            var updateData = new
+            {
+                Ball = new { X = newX, Y = newY },
+                Paddles = game.Paddles.ToDictionary(p => p.Key, p => new { p.Value.X, p.Value.Y }),
+                Player1Score = game.Player1Score,
+                Player2Score = game.Player2Score
+            };
+            _hubContext.Clients.Group(game.GameId).SendAsync("GameUpdate", updateData);
         }
     }
 }
+

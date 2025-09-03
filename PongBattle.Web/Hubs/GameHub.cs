@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.SignalR;
-using PongBattle.Web.Services;
 using PongBattle.Domain;
+using PongBattle.Web.Services;
 
 namespace PongBattle.Web.Hubs;
 
@@ -28,13 +28,13 @@ public class GameHub : Hub
         await Clients.Caller.SendAsync("GameState", gameState);
     }
 
-    public async Task MovePaddle(float yPosition)
+    public async Task MovePaddle(string playerId, float yPosition)
     {
         // Get game ID from connection (you might want to store this in a connection mapping)
         var gameId = GetGameIdForConnection(Context.ConnectionId);
         if (gameId != null)
         {
-            _gameService.UpdatePaddlePosition(gameId, Context.ConnectionId, yPosition);
+            _gameService.UpdatePaddlePosition(gameId, playerId, yPosition);
             await Clients.Group(gameId).SendAsync("PaddleMoved", Context.ConnectionId, yPosition);
         }
     }
@@ -66,3 +66,4 @@ public class GameHub : Hub
         return "default-game";
     }
 }
+
