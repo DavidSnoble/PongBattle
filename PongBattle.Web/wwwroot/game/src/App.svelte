@@ -11,6 +11,8 @@
   let ball;
   let phaserReady = false;
   let pendingUpdates = [];
+  let keys = {};
+  let playerId = null;
 
   onMount(async () => {
     // Connect to SignalR hub
@@ -27,6 +29,10 @@
 
     connection.on('PlayerJoined', (playerId) => {
       console.log('Player joined:', playerId);
+      // Store our player ID for paddle control
+      if (!playerId) {
+        playerId = 'player1'; // Default to player1 if not specified
+      }
     });
 
     connection.on('PaddleMoved', (playerId, yPosition) => {
@@ -93,27 +99,48 @@
 
 
 
-      // Add keyboard input
+      // Set up keyboard input
       this.input.keyboard.on('keydown-W', () => {
-        movePaddle(-10);
+        keys['W'] = true;
+      });
+      this.input.keyboard.on('keyup-W', () => {
+        keys['W'] = false;
       });
       this.input.keyboard.on('keydown-S', () => {
-        movePaddle(10);
+        keys['S'] = true;
       });
+      this.input.keyboard.on('keyup-S', () => {
+        keys['S'] = false;
+      });
+
+      // Set player ID to control left paddle
+      playerId = 'player1';
     }
 
     function update() {
-      // Game update logic
+      // Handle continuous paddle movement
+      if (connection && gameState && leftPaddle) {
+        const paddleSpeed = 5;
+        let deltaY = 0;
+
+        if (keys['W']) {
+          deltaY = -paddleSpeed;
+        } else if (keys['S']) {
+          deltaY = paddleSpeed;
+        }
+
+        if (deltaY !== 0) {
+          const newY = Math.max(50, Math.min(550, leftPaddle.y + deltaY));
+          if (newY !== leftPaddle.y) {
+            leftPaddle.y = newY;
+            connection.invoke('MovePaddle', newY);
+          }
+        }
+      }
     }
   });
 
-  function movePaddle(deltaY) {
-    if (connection && gameState) {
-      // This would need to be updated to track which paddle the player controls
-      const newY = Math.max(50, Math.min(550, leftPaddle.y + deltaY));
-      connection.invoke('MovePaddle', newY);
-    }
-  }
+
 
   function updateGameObjects() {
     if (!gameState) {

@@ -12,7 +12,7 @@ docker build --network=host -t pongbattle-dev -f Dockerfile.dev .
 
 echo "Starting the development container with hot-reloading..."
 docker run --rm -it \
-    --network=host \
+    -p 8080:8080 \
     -v .:/src \
     -e PONG_BATTLE_DB_USER=SA \
     -e PONG_BATTLE_DB_PASSWORD=ReallyStrongPassword123 \

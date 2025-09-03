@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Concurrent;
 
 namespace PongBattle.Domain;
@@ -14,7 +13,8 @@ public class GameState
 
     public void Update()
     {
-        if (!IsGameActive) return;
+        if (!IsGameActive)
+            return;
 
         // Update ball position
         Ball.X += Ball.VelocityX;
@@ -31,9 +31,28 @@ public class GameState
         {
             if (BallCollidesWithPaddle(paddle))
             {
+                // Reverse X direction
                 Ball.VelocityX = -Ball.VelocityX;
-                // Add some randomness to the bounce
-                Ball.VelocityY += (float)((new Random().NextDouble() - 0.5) * 2);
+
+                // Calculate bounce angle based on where ball hits paddle
+                float paddleCenter = paddle.Y + paddle.Height / 2f;
+                float ballRelativeY = Ball.Y - paddleCenter;
+                float normalizedPosition = ballRelativeY / (paddle.Height / 2f);
+
+                // Adjust Y velocity based on hit position (max angle of 60 degrees)
+                float maxAngle = (float)(Math.PI / 3); // 60 degrees
+                float bounceAngle = normalizedPosition * maxAngle;
+
+                // Set new Y velocity based on bounce angle and current speed
+                float currentSpeed = (float)
+                    Math.Sqrt(Ball.VelocityX * Ball.VelocityX + Ball.VelocityY * Ball.VelocityY);
+                Ball.VelocityY = (float)(Math.Sin(bounceAngle) * currentSpeed);
+
+                // Ensure minimum Y velocity to prevent straight horizontal movement
+                if (Math.Abs(Ball.VelocityY) < 1.0f)
+                {
+                    Ball.VelocityY = Ball.VelocityY > 0 ? 1.0f : -1.0f;
+                }
             }
         }
 
@@ -52,8 +71,14 @@ public class GameState
 
     private bool BallCollidesWithPaddle(Paddle paddle)
     {
-        return Ball.X >= paddle.X && Ball.X <= paddle.X + paddle.Width &&
-               Ball.Y >= paddle.Y && Ball.Y <= paddle.Y + paddle.Height;
+        // Account for ball radius in collision detection
+        float ballRadius = Ball.Size / 2f;
+        float paddleHalfWidth = paddle.Width / 2f;
+        float paddleHalfHeight = paddle.Height / 2f;
+        return Ball.X + ballRadius >= paddle.X - paddleHalfWidth
+            && Ball.X - ballRadius <= paddle.X + paddleHalfWidth
+            && Ball.Y + ballRadius >= paddle.Y - paddleHalfHeight
+            && Ball.Y - ballRadius <= paddle.Y + paddleHalfHeight;
     }
 
     private void ResetBall()
@@ -83,3 +108,4 @@ public class Paddle
     public int Height { get; set; } = 100;
     public float Speed { get; set; } = 300;
 }
+
