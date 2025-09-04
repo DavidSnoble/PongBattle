@@ -45,6 +45,18 @@ public class GameHub : Hub
         await Clients.Group(gameId).SendAsync("GameStarted");
     }
 
+    public async Task RestartGame(string gameId)
+    {
+        _gameService.RestartGame(gameId);
+        await Clients.Group(gameId).SendAsync("GameRestarted");
+    }
+
+    public async Task EndGame(string gameId)
+    {
+        _gameService.EndGame(gameId);
+        await Clients.Group(gameId).SendAsync("GameEnded", new { Winner = "forced" });
+    }
+
     public override async Task OnDisconnectedAsync(Exception exception)
     {
         var gameId = GetGameIdForConnection(Context.ConnectionId);

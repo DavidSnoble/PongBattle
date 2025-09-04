@@ -16,6 +16,11 @@
   let player1Score = 0;
   let player2Score = 0;
 
+  // Add game status variables
+  let gameStatus = 'waiting'; // 'waiting', 'playing', 'finished'
+  let winner = null;
+  let canRestart = false;
+
   onMount(async () => {
     connection = new HubConnectionBuilder()
       .withUrl('/gameHub')
@@ -40,7 +45,23 @@
     });
 
     connection.on('GameStarted', () => {
-      // Game has started
+      gameStatus = 'playing';
+      canRestart = false;
+    });
+
+    connection.on('GameEnded', (result) => {
+      gameStatus = 'finished';
+      winner = result.Winner;
+      player1Score = result.Player1Score;
+      player2Score = result.Player2Score;
+      canRestart = true;
+    });
+
+    connection.on('GameRestarted', () => {
+      gameStatus = 'playing';
+      winner = null;
+      canRestart = false;
+      // Scores will be updated via GameUpdate
     });
 
     connection.on('GameUpdate', (updatedGameState) => {
@@ -57,10 +78,9 @@
        }
      });
 
-    // Start connection and join game
+    // Start connection and join game (but don't auto-start the game)
     await connection.start();
     await connection.invoke('JoinGame', 'default-game');
-    await connection.invoke('StartGame', 'default-game');
 
     // Set up Phaser game
     const config = {
@@ -136,8 +156,8 @@
     }
 
     function update() {
-      // Handle continuous paddle movement
-      if (connection && gameState && leftPaddle && rightPaddle) {
+      // Handle continuous paddle movement (only when game is active)
+      if (connection && gameState && leftPaddle && rightPaddle && gameStatus === 'playing') {
         const paddleSpeed = 5;
 
         // Handle left paddle (W/S keys)
@@ -213,21 +233,54 @@
       rightPaddle.y = yPosition; // Update Y position from real-time movement
     }
   }
+
+  function handleStartGame() {
+    if (connection) {
+      connection.invoke('StartGame', 'default-game');
+    }
+  }
+
+  function handleRestart() {
+    if (connection) {
+      connection.invoke('RestartGame', 'default-game');
+    }
+  }
 </script>
 
 <main>
   <h2>Svelte + Phaser.js Pong Game</h2>
+
+  <!-- Game Status Display -->
+  <div class="game-status">
+    {#if gameStatus === 'waiting'}
+      <p>Ready to play!</p>
+      <button on:click={handleStartGame} class="start-btn">Start Game</button>
+    {:else if gameStatus === 'playing'}
+      <p class="playing">Game in progress!</p>
+    {:else if gameStatus === 'finished'}
+      <p class="finished">
+        Game Over! {winner === 'player1' ? 'Player 1' : 'Player 2'} wins!
+      </p>
+      {#if canRestart}
+        <button on:click={handleRestart} class="restart-btn">Play Again</button>
+      {/if}
+    {/if}
+  </div>
+
   <div class="score-display">
     <span class="player1-score">Player 1: {player1Score}</span>
     <span class="player2-score">Player 2: {player2Score}</span>
   </div>
+
   <div bind:this={gameContainer} class="game-canvas"></div>
 </main>
 
 <style>
   .game-canvas {
     border: 1px solid #ccc;
-    margin: 20px 0;
+    margin: auto;
+    width: 800px;
+    height: 600px;
   }
 
   .score-display {
@@ -242,5 +295,53 @@
   .player1-score, .player2-score {
     font-size: 18px;
     font-weight: bold;
+  }
+
+  .game-status {
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .playing {
+    color: green;
+    font-weight: bold;
+  }
+
+  .finished {
+    color: red;
+    font-weight: bold;
+  }
+
+  .restart-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+
+  .restart-btn:hover {
+    background-color: #0056b3;
+  }
+
+  .start-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+
+  .start-btn:hover {
+    background-color: #218838;
   }
 </style>

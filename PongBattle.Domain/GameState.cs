@@ -10,6 +10,9 @@ public class GameState
     public int Player1Score { get; set; }
     public int Player2Score { get; set; }
     public bool IsGameActive { get; set; }
+    public bool IsGameFinished { get; set; }
+    public string Winner { get; set; }
+    public const int WINNING_SCORE = 7;
 
     public void Update()
     {
@@ -61,11 +64,13 @@ public class GameState
         {
             Player2Score++;
             ResetBall();
+            CheckWinCondition();
         }
         else if (Ball.X > 800)
         {
             Player1Score++;
             ResetBall();
+            CheckWinCondition();
         }
     }
 
@@ -87,6 +92,22 @@ public class GameState
         Ball.Y = 300;
         Ball.VelocityX = Ball.VelocityX > 0 ? -3.333f : 3.333f;
         Ball.VelocityY = (float)((new Random().NextDouble() - 0.5) * 6.666f);
+    }
+
+    private void CheckWinCondition()
+    {
+        if (Player1Score >= WINNING_SCORE)
+        {
+            IsGameFinished = true;
+            Winner = "player1";
+            IsGameActive = false;
+        }
+        else if (Player2Score >= WINNING_SCORE)
+        {
+            IsGameFinished = true;
+            Winner = "player2";
+            IsGameActive = false;
+        }
     }
 }
 

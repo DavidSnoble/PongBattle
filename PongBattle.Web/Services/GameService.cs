@@ -22,7 +22,7 @@ public class GameService
 
     public GameState CreateGame(string gameId)
     {
-        var gameState = new GameState { GameId = gameId, IsGameActive = true };
+        var gameState = new GameState { GameId = gameId, IsGameActive = false };
 
         // Initialize both paddles immediately so collision detection works from the start
         var leftPaddle = new Paddle
@@ -98,6 +98,55 @@ public class GameService
         }
     }
 
+    public void CheckAndHandleGameEnd(string gameId)
+    {
+        if (_games.TryGetValue(gameId, out var gameState))
+        {
+            if (gameState.IsGameFinished)
+            {
+                // Notify all clients that game has ended
+                _hubContext.Clients.Group(gameId).SendAsync("GameEnded", new
+                {
+                    Winner = gameState.Winner,
+                    Player1Score = gameState.Player1Score,
+                    Player2Score = gameState.Player2Score
+                });
+            }
+        }
+    }
+
+    public void RestartGame(string gameId)
+    {
+        if (_games.TryGetValue(gameId, out var gameState))
+        {
+            // Reset game state
+            gameState.IsGameActive = true;
+            gameState.IsGameFinished = false;
+            gameState.Winner = null;
+            gameState.Player1Score = 0;
+            gameState.Player2Score = 0;
+
+            // Reset ball to center
+            gameState.Ball.X = 400;
+            gameState.Ball.Y = 300;
+            gameState.Ball.VelocityX = 3.333f;
+            gameState.Ball.VelocityY = 0;
+
+            // Reset paddles to center
+            if (gameState.Paddles.TryGetValue("player1", out var leftPaddle))
+            {
+                leftPaddle.Y = 300;
+            }
+            if (gameState.Paddles.TryGetValue("player2", out var rightPaddle))
+            {
+                rightPaddle.Y = 300;
+            }
+
+            // Notify clients
+            _hubContext.Clients.Group(gameId).SendAsync("GameRestarted");
+        }
+    }
+
     public void RemovePlayer(string gameId, string playerId)
     {
         if (_games.TryGetValue(gameId, out var gameState))
@@ -119,16 +168,22 @@ public class GameService
         _updateCounter++;
         foreach (var game in _games.Values)
         {
-            var oldX = game.Ball.X;
-            var oldY = game.Ball.Y;
-            game.Update();
-            var newX = game.Ball.X;
-            var newY = game.Ball.Y;
+            if (game.IsGameActive)
+            {
+                var oldX = game.Ball.X;
+                var oldY = game.Ball.Y;
+                game.Update();
+                var newX = game.Ball.X;
+                var newY = game.Ball.Y;
+
+                // Check if game should end
+                CheckAndHandleGameEnd(game.GameId);
+            }
 
             // Broadcast the updated game state to all clients
             var updateData = new
             {
-                Ball = new { X = newX, Y = newY },
+                Ball = new { X = game.Ball.X, Y = game.Ball.Y },
                 Paddles = game.Paddles.ToDictionary(p => p.Key, p => new { p.Value.X, p.Value.Y }),
                 Player1Score = game.Player1Score,
                 Player2Score = game.Player2Score
